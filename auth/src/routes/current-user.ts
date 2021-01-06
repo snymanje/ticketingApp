@@ -1,8 +1,7 @@
-import { requireAuth } from './../middlewares/require-auth';
 import express from "express";
 import jwt from "jsonwebtoken";
 
-import { currentUser } from './../middlewares/current-user';
+import { currentUser } from '@snymanje/common';
 
 const router = express.Router();
 

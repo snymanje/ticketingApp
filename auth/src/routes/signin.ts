@@ -1,10 +1,10 @@
 import { Password } from './../services/password';
 import jwt from "jsonwebtoken";
-import { BadRequestError } from './../errors/BadRequestError';
+import { BadRequestError } from '@snymanje/common';
 import express, { Response, Request } from "express";
 import { body } from "express-validator";
 import { User } from "../models/user";
-import { validateRequest } from "./../middlewares/validate-request";
+import { validateRequest } from "@snymanje/common";
 
 const router = express.Router();
 

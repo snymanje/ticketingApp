@@ -1,5 +1,3 @@
-import { Password } from './../services/password';
-import { currentUser } from './../middlewares/current-user';
 import request from "supertest";
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
