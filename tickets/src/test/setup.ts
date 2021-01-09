@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import { app } from '../app';
 import jwt from 'jsonwebtoken';
 
+jest.mock('../nats-wrapper');
+
 let mongo: any;
 beforeAll(async () => {
     process.env.JWT_KEY = 'adadasd';

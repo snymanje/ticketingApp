@@ -1,21 +1,12 @@
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-// An interface that describes this object
-interface TicketAttrs {
+export interface TicketAttrs {
   title: string;
   price: number;
   userId: string;
 }
 
-interface TicketDoc extends Document {
-    title: string;
-    price: number;
-    userId: string;
-}
-
-interface TicketModel extends Model<TicketDoc> {
-    build(attrs: TicketAttrs): TicketDoc;
-}
+interface TicketDoc extends TicketAttrs, Document {}
 
 const ticketSchema = new mongoose.Schema(
   {
@@ -28,9 +19,9 @@ const ticketSchema = new mongoose.Schema(
       required: true,
     },
     userId: {
-        type: String,
-        required: true
-    }
+      type: String,
+      required: true,
+    },
   },
   {
     toJSON: {
@@ -38,15 +29,11 @@ const ticketSchema = new mongoose.Schema(
       versionKey: false,
       transform(doc, ret) {
         delete ret._id;
-      }
-    }
+      },
+    },
   }
 );
 
-ticketSchema.statics.build = (attrs: TicketAttrs) => {
-    return new Ticket(attrs);
-}
-
-const Ticket = mongoose.model<TicketDoc, TicketModel>("Ticket", ticketSchema);
+const Ticket = mongoose.model<TicketDoc>("Ticket", ticketSchema);
 
 export { Ticket };

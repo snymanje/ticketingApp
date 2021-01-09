@@ -1,8 +1,9 @@
 import express, { Request, Response} from "express";
 import { body } from 'express-validator';
 import { requireAuth, validateRequest } from "@snymanje/common";
-import { Ticket } from '../models/ticket';
+import { Ticket, TicketAttrs } from '../models/ticket';
 import { TickerCreatedPublisher } from '../events/publishers/ticket-created-publisher';
+import { natsWrapper } from './../nats-wrapper';
 
 const router = express.Router();
 
@@ -17,15 +18,15 @@ router.post("/api/tickets", requireAuth, [
 ], validateRequest, async (req: Request, res: Response) => {
     const { title, price } = req.body;
 
-    const ticket = Ticket.build({
+   const ticketObj: TicketAttrs = {
         title,
         price,
         userId: req.currentUser!.id
-    })
+    }
 
-    await ticket.save();
+    const ticket = await Ticket.create(ticketObj);
 
-    new TickerCreatedPublisher(client).publish({
+    await new TickerCreatedPublisher(natsWrapper.client).publish({
         id: ticket.id,
         title: ticket.title,
         price: ticket.price,
