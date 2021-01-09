@@ -37,7 +37,6 @@ const ticketSchema = new mongoose.Schema(
       virtuals: true,
       versionKey: false,
       transform(doc, ret) {
-        delete ret.password;
         delete ret._id;
       }
     }
