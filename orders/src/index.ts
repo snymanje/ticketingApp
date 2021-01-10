@@ -25,7 +25,7 @@ const start = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
-    console.log('Connected to mongodb tickets DB')
+    console.log('Connected to mongodb orders DB')
 
     await natsWrapper.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URL);
     natsWrapper.client.on('close', () => {
