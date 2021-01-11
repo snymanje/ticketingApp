@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 export interface TicketAttrs {
   title: string;
@@ -6,7 +7,9 @@ export interface TicketAttrs {
   userId: string;
 }
 
-interface TicketDoc extends TicketAttrs, Document {}
+interface TicketDoc extends TicketAttrs, Document {
+  version: number;
+}
 
 const ticketSchema = new mongoose.Schema(
   {
@@ -26,13 +29,16 @@ const ticketSchema = new mongoose.Schema(
   {
     toJSON: {
       virtuals: true,
-      versionKey: false,
+      versionKey: true,
       transform(doc, ret) {
         delete ret._id;
       },
     },
   }
 );
+
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 const Ticket = mongoose.model<TicketDoc>("Ticket", ticketSchema);
 

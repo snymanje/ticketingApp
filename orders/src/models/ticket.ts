@@ -1,5 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import { Order, OrderStatus } from '../models/order';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 export interface TicketAttrs {
   title: string;
@@ -8,6 +9,7 @@ export interface TicketAttrs {
 
 export interface TicketDoc extends TicketAttrs, Document {
   isReserved(): Promise<boolean>;
+  version: number;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -24,7 +26,7 @@ const ticketSchema = new mongoose.Schema(
   {
     toJSON: {
       virtuals: true,
-      versionKey: false,
+      versionKey: true,
       transform(doc, ret) {
         delete ret._id;
       },
@@ -42,6 +44,9 @@ ticketSchema.methods.isReserved = async function () {
 
   return !!existingOrder;
 };
+
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 const Ticket = mongoose.model<TicketDoc>("Ticket", ticketSchema);
 
