@@ -42,6 +42,7 @@ router.post(`/api/orders`, requireAuth, [
         userId: req.currentUser!.id,
         status: OrderStatus.Created,
         expiresAt: expiration,
+        version: 0,
         ticket
     };
 
@@ -51,7 +52,7 @@ router.post(`/api/orders`, requireAuth, [
     // Publish an event saying that an order was created 
     new OrderCreatedPublisher(natsWrapper.client).publish({
         id: order.id,
-        version: order.ticket.version,
+        version: order.version,
         status: order.status,
         userId: order.userId,
         expiresAt: order.expiresAt.toISOString(),

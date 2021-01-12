@@ -1,6 +1,7 @@
-import { Document, Schema, model } from "mongoose";
-import { TicketDoc } from './ticket';
+import mongoose from 'mongoose';
 import { OrderStatus } from '@snymanje/common';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { TicketDoc } from './ticket';
 
 export { OrderStatus };
 
@@ -9,41 +10,58 @@ export interface OrderAttrs {
   status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
+  version: number;
 }
 
-interface OrdersDoc extends OrderAttrs, Document {}
+interface OrderDoc extends mongoose.Document {
+  userId: string;
+  status: OrderStatus;
+  expiresAt: Date;
+  ticket: TicketDoc;
+  version: number;
+}
 
-const ordersSchema = new Schema(
+interface OrderModel extends mongoose.Model<OrderDoc> {
+  build(attrs: OrderAttrs): OrderDoc;
+}
+
+const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
       required: true,
     },
     status: {
-        type: String,
-        required: true,
-        enum: Object.values(OrderStatus),
-        default: OrderStatus.Created
+      type: String,
+      required: true,
+      enum: Object.values(OrderStatus),
+      default: OrderStatus.Created,
     },
     expiresAt: {
-        type: Schema.Types.Date
+      type: mongoose.Schema.Types.Date,
     },
     ticket: {
-        type: Schema.Types.ObjectId,
-        ref: 'Ticket'
-    }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Ticket',
+    },
   },
   {
     toJSON: {
-      virtuals: true,
-      versionKey: false,
       transform(doc, ret) {
+        ret.id = ret._id;
         delete ret._id;
       },
     },
   }
 );
 
-const Order = model<OrdersDoc>("Order", ordersSchema);
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
+
+orderSchema.statics.build = (attrs: OrderAttrs) => {
+  return new Order(attrs);
+};
+
+const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema);
 
 export { Order };
