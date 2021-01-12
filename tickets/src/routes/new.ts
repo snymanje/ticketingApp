@@ -1,7 +1,7 @@
 import express, { Request, Response} from "express";
 import { body } from 'express-validator';
 import { requireAuth, validateRequest } from "@snymanje/common";
-import { Ticket, TicketAttrs } from '../models/ticket';
+import { Ticket } from '../models/ticket';
 import { TickerCreatedPublisher } from '../events/publishers/ticket-created-publisher';
 import { natsWrapper } from './../nats-wrapper';
 
