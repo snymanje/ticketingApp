@@ -4,7 +4,8 @@ import { Order } from '../../models/order';
 import { Ticket, TicketAttrs } from '../../models/ticket';
 
 const buildTciket = async () => {
-    const ticket = new Ticket({
+    const ticket = Ticket.build({
+        id: '231232',
         title: 'concert',
         price: 360
     });

@@ -34,7 +34,8 @@ await ticket.save();
 });
 
 it('emits a order cancelled event', async () => {
-  const ticket = new Ticket({
+  const ticket = Ticket.build({
+    id: '232342',
     title: 'concert',
     price: 360
 });
