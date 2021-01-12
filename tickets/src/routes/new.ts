@@ -18,13 +18,11 @@ router.post("/api/tickets", requireAuth, [
 ], validateRequest, async (req: Request, res: Response) => {
     const { title, price } = req.body;
 
-   const ticketObj: TicketAttrs = {
+    const ticket = await Ticket.build({
         title,
         price,
         userId: req.currentUser!.id
-    }
-
-    const ticket = await Ticket.create(ticketObj);
+    });
 
     await new TickerCreatedPublisher(natsWrapper.client).publish({
         id: ticket.id,
