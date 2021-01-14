@@ -14,4 +14,4 @@ expirationQueue.process(async (job) => {
     console.log("I want to publish an expiration complete event for orderId", job.data.orderId)
 });
 
-export = { expirationQueue };
+export { expirationQueue };

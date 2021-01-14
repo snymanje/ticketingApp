@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { OrderStatus } from '@snymanje/common';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { OrderStatus } from '@snymanje/common';
 import { TicketDoc } from './ticket';
 
 export { OrderStatus };

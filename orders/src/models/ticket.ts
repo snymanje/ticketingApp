@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { Order, OrderStatus } from './order';
 
-export interface TicketAttrs {
+interface TicketAttrs {
   id: string;
   title: string;
   price: number;
@@ -37,7 +37,7 @@ const ticketSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      transform(_: any, ret: any) {
+      transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
       },
